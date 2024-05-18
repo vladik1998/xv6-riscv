@@ -4,4 +4,6 @@
         "riscv.h": "c",
         "defs.h": "c",
     },
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false,
 }

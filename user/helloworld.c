@@ -5,7 +5,7 @@
 int
 main()
 {
-    const char *s = "Hello World xv6\n";
-    write(1, s, strlen(s));
-    exit(0);
+  const char *s = "Hello World xv6\n";
+  write(1, s, strlen(s));
+  exit(0);
 }

@@ -18,6 +18,9 @@ struct spinlock pid_lock;
 extern void forkret(void);
 static void freeproc(struct proc *p);
 
+const char *const no_exit_msg = "No exit message";
+
+
 extern char trampoline[]; // trampoline.S
 
 // helps ensure that wakeups of wait()ing
@@ -344,7 +347,7 @@ reparent(struct proc *p)
 // An exited process remains in the zombie state
 // until its parent calls wait().
 void
-exit(int status)
+exit(int status, char* ex_msg)
 {
   struct proc *p = myproc();
 
@@ -375,6 +378,14 @@ exit(int status)
   
   acquire(&p->lock);
 
+  // Copy the exit message to the PCB.
+  // If the msg in null, we insert the constant no msg.
+  if(!ex_msg){
+    safestrcpy(p->exit_msg, no_exit_msg, sizeof(p->exit_msg));
+  }else{
+    safestrcpy(p->exit_msg, ex_msg, sizeof(p->exit_msg));
+  }
+
   p->xstate = status;
   p->state = ZOMBIE;
 
@@ -388,7 +399,7 @@ exit(int status)
 // Wait for a child process to exit and return its pid.
 // Return -1 if this process has no children.
 int
-wait(uint64 addr)
+wait(uint64 addr, uint64 ex_msg_addr)
 {
   struct proc *pp;
   int havekids, pid;
@@ -408,8 +419,12 @@ wait(uint64 addr)
         if(pp->state == ZOMBIE){
           // Found one.
           pid = pp->pid;
-          if(addr != 0 && copyout(p->pagetable, addr, (char *)&pp->xstate,
-                                  sizeof(pp->xstate)) < 0) {
+          // For Task3, we added another address which contains the exit message
+          // of the proccess. We copy the string from the kernal space and we need
+          // to check that the address is a valid non-null string pointer.
+          if((addr != 0 && copyout(p->pagetable, addr, (char *)&pp->xstate, sizeof(pp->xstate)) < 0) ||
+              (ex_msg_addr !=0 && copyout(p->pagetable, ex_msg_addr, (char *)&pp->exit_msg, sizeof(pp->exit_msg)) < 0)){
+              
             release(&pp->lock);
             release(&wait_lock);
             return -1;

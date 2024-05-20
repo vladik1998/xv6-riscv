@@ -15,6 +15,13 @@ There is no difference in the memory size before and after freeing it, because t
 
 - **Heap Management**: The heap is managed by the xv6 runtime library, which maintains its own free list of memory blocks. When you call `free()`, the block of memory is added to this free list and can be reused by subsequent `malloc()` calls within the same process.
 
+## Task 3
+### Q1
+As soon as we changed these signatures, there were a lot of errors in the code. The reason for this is the fact that many functions in our operation system used a signature with one argument.
+
+### Q2
+
+
 ## Task 4
 ### Q1
 The schedueling policy is implemented in the file `kernel/proc.c` inside the function `scheduler`.

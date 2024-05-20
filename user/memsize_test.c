@@ -12,5 +12,5 @@ main()
   printf("Freeing 20,000 bytes using free...\n");
   free(allocated);
   printf("This process is using %d bytes\n", memsize());
-  exit(0);
+  exit(0, 0);
 }

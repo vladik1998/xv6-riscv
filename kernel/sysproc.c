@@ -10,10 +10,22 @@ uint64
 sys_exit(void)
 {
   int n;
+  char buf[32];
+  int is_null;
   argint(0, &n);
-  exit(n);
+  // To copy the exit msg from userspace to kernal space.
+  is_null = argstr(1, buf, sizeof(buf));
+  printf("Size read: %d, Buffer: %d, the string is: %s\n", is_null, sizeof(buf), buf);
+  if(is_null < 0){
+    return -1;
+  }
+  if(!is_null){
+    exit(n, 0);
+  }
+  exit(n, buf);
   return 0;  // not reached
 }
+
 
 uint64
 sys_getpid(void)
@@ -31,8 +43,11 @@ uint64
 sys_wait(void)
 {
   uint64 p;
+  // A placeholder to save the exit msg.
+  uint64 exit_msg_p;
   argaddr(0, &p);
-  return wait(p);
+  argaddr(1, &exit_msg_p);
+  return wait(p, exit_msg_p);
 }
 
 uint64

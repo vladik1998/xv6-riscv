@@ -25,8 +25,10 @@ int
 fetchstr(uint64 addr, char *buf, int max)
 {
   struct proc *p = myproc();
-  if(copyinstr(p->pagetable, buf, addr, max) < 0)
+  if(copyinstr(p->pagetable, buf, addr, max) < 0){
     return -1;
+  }
+    
   return strlen(buf);
 }
 
@@ -76,7 +78,11 @@ argstr(int n, char *buf, int max)
 {
   uint64 addr;
   argaddr(n, &addr);
-  return fetchstr(addr, buf, max);
+  if(!addr){
+    return 0;
+  }else{
+    return fetchstr(addr, buf, max);
+  }
 }
 
 // Prototypes for the functions that handle system calls.

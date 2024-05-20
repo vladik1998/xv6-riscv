@@ -15,11 +15,7 @@ sys_exit(void)
   argint(0, &n);
   // To copy the exit msg from userspace to kernal space.
   is_null = argstr(1, buf, sizeof(buf));
-  printf("Size read: %d, Buffer: %d, the string is: %s\n", is_null, sizeof(buf), buf);
-  if(is_null < 0){
-    return -1;
-  }
-  if(!is_null){
+  if(is_null < 0 || !is_null){
     exit(n, 0);
   }
   exit(n, buf);

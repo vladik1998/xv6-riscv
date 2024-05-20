@@ -423,7 +423,7 @@ wait(uint64 addr, uint64 ex_msg_addr)
           // of the proccess. We copy the string from the kernal space and we need
           // to check that the address is a valid non-null string pointer.
           if((addr != 0 && copyout(p->pagetable, addr, (char *)&pp->xstate, sizeof(pp->xstate)) < 0) ||
-              (ex_msg_addr !=0 && copyout(p->pagetable, ex_msg_addr, (char *)&pp->exit_msg, sizeof(pp->exit_msg)) < 0)){
+              (ex_msg_addr != 0 && copyout(p->pagetable, ex_msg_addr, (char *)&pp->exit_msg, sizeof(pp->exit_msg)) < 0)){
               
             release(&pp->lock);
             release(&wait_lock);

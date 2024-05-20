@@ -5,5 +5,5 @@
 int
 main()
 {
-  exit(0, "Goodbye World xv6 letsa asd asd asda sd asd asd asd asd as d");
+  exit(0, "Goodbye World xv6");
 }
